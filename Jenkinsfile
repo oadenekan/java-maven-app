@@ -4,16 +4,15 @@ pipeline {
     agent any
     tools {
         maven 'maven-3.9'
-    }
+    }     
     stages {
-            stage("init") {
-                steps {
-                    script {
-                        gv = load 'script.groovy'
-                    }
+        stage("init") {
+            steps {
+                script {
+                    gv = load 'script.groovy'
                 }
             }
-    stages {
+        }
         stage("build jar") {
             steps {
                 script {
@@ -22,12 +21,12 @@ pipeline {
             }
         }
         stage("build image") {
-                    steps {
-                        script {
-                            gv.buildImage()
-                        }
-                    }
+            steps {
+                script {
+                    gv.buildImage()
                 }
+            }
+        }
         stage("deploy") {
             steps {
                 script{

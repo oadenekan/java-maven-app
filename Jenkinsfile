@@ -31,6 +31,7 @@ pipeline {
                 script{
                     gv.testApp()
                 }
+           }
         }
         stage("deploy") {
             steps {

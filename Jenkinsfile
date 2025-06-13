@@ -7,10 +7,16 @@ pipeline {
             steps {
                 script {
                     echo "testing the application..."
+                    echo "Executing pipeline for $BRANCH_NAME"
                 }
             }
         }
         stage("build") {
+            when {
+                expression {
+                    BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 script {
                     echo "building the application..."
@@ -18,6 +24,11 @@ pipeline {
             }
         }
         stage("deploy") {
+            when {
+                expression {
+                    BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 script{
                     echo "deploying the application..."

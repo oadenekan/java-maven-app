@@ -1,37 +1,39 @@
+#!/usr/bin/env groovy
+
+@Library('jenkins-shared-library') //import the library code from jenkins global system
 def gv
 
 pipeline {
     agent any
+    tools {
+        maven 'Maven'
+    }
     stages {
-        stage("test") {
+        stage("init") {
             steps {
                 script {
-                    echo "testing the application..."
-                    echo "Executing pipeline for $BRANCH_NAME"
+                    gv = load "script.groovy"
                 }
             }
         }
-        stage("build") {
-            when {
-                expression {
-                    BRANCH_NAME == 'main'
-                }
-            }
+        stage("build jar") {
             steps {
                 script {
-                    echo "building the application..."
+                    buildJar()
+                }
+            }
+        }
+        stage("build image") {
+            steps {
+                script {
+                    buildImage()
                 }
             }
         }
         stage("deploy") {
-            when {
-                expression {
-                    BRANCH_NAME == 'main'
-                }
-            }
             steps {
                 script{
-                    echo "deploying the application..."
+                    gv.deployApp()
                 }
             }
         }

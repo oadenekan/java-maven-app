@@ -1,4 +1,4 @@
-#!/usr/bin/env groovy
+#!/user/bin/env groovy
 
 @Library('jenkins-shared-library') //import the library code from jenkins custom global system
 def gv

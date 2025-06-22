@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-@Library('jenkins-shared-library') //import the library code from jenkins global system
+@Library('jenkins-shared-library') //import the library code from jenkins custom global system
 def gv
 
 pipeline {

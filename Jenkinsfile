@@ -1,4 +1,6 @@
 def gv
+def BRANCH_NAME = env.GIT_BRANCH.replace('origin/', '')
+
 
 pipeline {
     agent any

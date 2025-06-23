@@ -1,10 +1,19 @@
 def gv
-def BRANCH_NAME = env.GIT_BRANCH.replace('origin/', '')
+def BRANCH_NAME = ""
 
 
 pipeline {
     agent any
     stages {
+        stage("Init") {
+            steps {
+                script {
+                    // Get the current branch name from Git
+                    BRANCH_NAME = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
+                    echo "Branch detected: ${BRANCH_NAME}"
+                }
+            }
+        }
         stage("test") {
             steps {
                 script {

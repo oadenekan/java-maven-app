@@ -51,10 +51,10 @@ pipeline {
         stage("commit version update") {
             steps {
                 script {
-                    sshagent(['GitHub-ssh']) {
-                        sh 'git config --global user.email "jenkins@example.com"'
+                    sshagent(['GitHub-ssh-bot']) {
+                        sh 'git config --global user.email "jenkins-bot@example.com"'
                         sh 'git config --global user.name "jenkins"'
-                        sh "git remote set-url origin git@github.com:oadenekan/java-maven-app.git"
+                        sh 'git remote set-url origin git@github.com:oadenekan/java-maven-app.git'
 
                         sh '''
                             mkdir -p ~/.ssh
@@ -62,7 +62,7 @@ pipeline {
                         '''
 
                         sh 'git add .'
-                        sh 'git commit -m "ci: version bump" || echo "Nothing to commit"'
+                        sh 'git commit --author="jenkins <jenkins-bot@example.com>" -m "ci: version bump" || echo "Nothing to commit"'
                         sh 'git push origin HEAD:Jenkins-jobs'
                     }
                 }

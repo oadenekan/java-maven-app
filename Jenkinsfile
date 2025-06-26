@@ -56,6 +56,10 @@ pipeline {
                         sh 'git config --global user.name "jenkins"'
                         sh "git remote set-url origin git@github.com:oadenekan/java-maven-app.git"
 
+                        sh '''
+                            mkdir -p ~/.ssh
+                            ssh-keyscan github.com >> ~/.ssh/known_hosts
+                        '''
 
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump" || echo "Nothing to commit"'

@@ -51,7 +51,7 @@ pipeline {
         stage("commit version update") {
             steps {
                 script {
-                    sshagent(['github-ssh']) {
+                    sshagent(['Github-ssh']) {
                         sh 'git config --global user.email "jenkins@example.com"'
                         sh 'git config --global user.name "jenkins"'
                         sh "git remote set-url origin git@github.com/oadenekan/java-maven-app.git"

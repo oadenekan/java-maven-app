@@ -1,49 +1,48 @@
 def gv
-def BRANCH_NAME = ""
-
 
 pipeline {
     agent any
+    tools {
+        maven "Maven"
+    }
     stages {
-        stage("Init") {
+        stage ("increment version"){
             steps {
                 script {
-                    // Get the current branch name from Git
-                    BRANCH_NAME = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
-                    echo "Branch detected: ${BRANCH_NAME}"
-                }
+                    echo "incrementing app version"
+                    sh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit'
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)/version>'
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
+               }
             }
         }
-        stage("test") {
-            steps {
-                script {
-                    echo "testing the application..."
-                    echo "Executing pipeline for $BRANCH_NAME"
-                    echo "Testing the integration"
-                }
-            }
-        }
-        stage("build") {
-            when {
-                expression {
-                    BRANCH_NAME == 'master'
-                }
-            }
+        stage("build app") {
             steps {
                 script {
                     echo "building the application..."
+                    sh "mvn clean package"
+                }
+            }
+        }
+        stage("build image") {
+            steps {
+                script {
+                    echo "building the docker image..."
+                    withCredentials([usernamePassword(credentialsId: "docker-hub-repo", passwordVariable: "PASS", usernameVariable: "USER")]) {
+                        sh "docker build -t olusolaayeni/demo-app:${IMAGE_NAME} ."
+                        sh "echo $PASS | docker login -u $USER --password-stdin"
+                        sh "docker push olusolaayeni/demo-app:${IMAGE_NAME}"
+                    }
                 }
             }
         }
         stage("deploy") {
-            when {
-                expression {
-                    BRANCH_NAME == 'master'
-                }
-            }
             steps {
                 script{
-                    echo "deploying the application..."
+                    echo "deploying docker image..."
                 }
             }
         }

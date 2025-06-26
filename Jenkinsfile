@@ -54,7 +54,7 @@ pipeline {
                     sshagent(['GitHub-ssh']) {
                         sh 'git config --global user.email "jenkins@example.com"'
                         sh 'git config --global user.name "jenkins"'
-                        sh "git remote set-url origin git@github.com/oadenekan/java-maven-app.git"
+                        sh "git remote set-url origin git@github.com:oadenekan/java-maven-app.git"
 
 
                         sh 'git add .'

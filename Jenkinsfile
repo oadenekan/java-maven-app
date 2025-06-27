@@ -1,4 +1,5 @@
 def gv
+def BRANCH_NAME = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
 
 pipeline {
     agent any
@@ -15,7 +16,7 @@ pipeline {
         stage("build") {
             when {
                 expression {
-                    env.BRANCH_NAME == 'master'
+                    BRANCH_NAME == 'master'
                 }
             }
             steps {
@@ -27,7 +28,7 @@ pipeline {
         stage("deploy") {
             when {
                 expression {
-                    env.BRANCH_NAME == 'master'
+                    BRANCH_NAME == 'master'
                 }
             }
             steps {

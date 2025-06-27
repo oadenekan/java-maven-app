@@ -61,6 +61,8 @@ pipeline {
                             ssh-keyscan github.com >> ~/.ssh/known_hosts
                         '''
 
+                        sh 'git config --list'
+
                         sh 'git add .'
                         sh 'git commit --author="jenkins <jenkins-bot@example.com>" -m "ci: version bump" || echo "Nothing to commit"'
                         sh 'git push origin HEAD:Jenkins-jobs'

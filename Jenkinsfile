@@ -1,14 +1,21 @@
 def gv
-def BRANCH_NAME = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
 
 pipeline {
     agent any
     stages {
+        stage('Detect Branch') {
+            steps {
+                script {
+                    env.BRANCH_NAME = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
+                    echo "Detected branch: ${env.BRANCH_NAME}"
+                }
+            }
+        }
         stage("test") {
             steps {
                 script {
                     echo "testing the application..."
-                    echo "Executing pipeline for $BRANCH_NAME"
+                    echo "Executing pipeline for ${env.BRANCH_NAME}"
                     echo "testing the integration"
                 }
             }
@@ -16,7 +23,7 @@ pipeline {
         stage("build") {
             when {
                 expression {
-                    BRANCH_NAME == 'master'
+                    env.BRANCH_NAME == 'master'
                 }
             }
             steps {
@@ -28,11 +35,11 @@ pipeline {
         stage("deploy") {
             when {
                 expression {
-                    BRANCH_NAME == 'master'
+                    env.BRANCH_NAME == 'master'
                 }
             }
             steps {
-                script{
+                script {
                     echo "deploying the application..."
                 }
             }
